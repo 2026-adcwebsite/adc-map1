@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Biznese pa Website — Webora</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f7f5;
+      --surface: #ffffff;
+      --border: #e4e4e0;
+      --border-strong: #c8c8c2;
+      --text: #1a1a18;
+      --muted: #6b6b66;
+      --hint: #9d9d98;
+      --accent: #1a1a18;
+      --accent-fg: #ffffff;
+      --info-bg: #eff6ff;
+      --info-border: #bfdbfe;
+      --info-text: #1d4ed8;
+      --success-bg: #f0fdf4;
+      --success-border: #bbf7d0;
+      --success-text: #15803d;
+      --warn-bg: #fffbeb;
+      --warn-border: #fde68a;
+      --warn-text: #92400e;
+      --danger-bg: #fef2f2;
+      --danger-border: #fecaca;
+      --danger-text: #b91c1c;
+      --radius: 10px;
+      --radius-sm: 6px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 15px;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; }
+    .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
+    .header-tag { font-size: 12px; color: var(--muted); background: var(--bg); padding: 3px 9px; border-radius: 20px; border: 1px solid var(--border); }
+
+    /* MAIN LAYOUT */
+    .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+    .page-title { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+    .page-sub { font-size: 14px; color: var(--muted); margin-bottom: 2rem; }
+
+    /* CARDS */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1rem;
+    }
+    .card-title { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; }
+
+    /* FORM GRID */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    label { font-size: 12px; font-weight: 500; color: var(--muted); }
+    input, select {
+      width: 100%; padding: 8px 11px; border: 1px solid var(--border);
+      border-radius: var(--radius-sm); font-size: 14px; font-family: inherit;
+      background: var(--surface); color: var(--text);
+      transition: border-color 0.15s;
+      outline: none;
+    }
+    input:focus, select:focus { border-color: var(--accent); }
+    input[type="password"] { font-family: 'DM Mono', monospace; letter-spacing: 0.05em; }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 18px; border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 500; font-family: inherit;
+      cursor: pointer; border: 1px solid transparent;
+      transition: all 0.15s;
+    }
+    .btn-primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
+    .btn-ghost:hover { background: var(--bg); }
+    .btn-sm { padding: 6px 12px; font-size: 13px; }
+
+    .actions-row { display: flex; gap: 8px; align-items: center; margin-top: 14px; flex-wrap: wrap; }
+
+    /* STATUS */
+    .status { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 7px; }
+    .status.error { color: var(--danger-text); }
+    .status.success { color: var(--success-text); }
+
+    /* SPINNER */
+    .spinner {
+      width: 14px; height: 14px; border: 2px solid var(--border);
+      border-top-color: var(--text); border-radius: 50%;
+      animation: spin 0.65s linear infinite; flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ALERT BOXES */
+    .alert { padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; display: flex; gap: 8px; align-items: flex-start; margin-bottom: 1rem; }
+    .alert-info { background: var(--info-bg); border: 1px solid var(--info-border); color: var(--info-text); }
+    .alert-warn { background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-text); }
+    .alert-success { background: var(--success-bg); border: 1px solid var(--success-border); color: var(--success-text); }
+    .alert svg { flex-shrink: 0; margin-top: 1px; }
+
+    /* STATS */
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1rem; }
+    .stat { background: var(--bg); border-radius: var(--radius-sm); padding: 12px 14px; }
+    .stat-val { font-size: 22px; font-weight: 600; }
+    .stat-lbl { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    /* FILTER CHIPS */
+    .filter-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+    .chip {
+      padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;
+      border: 1px solid var(--border); background: transparent; cursor: pointer;
+      color: var(--muted); transition: all 0.12s;
+    }
+    .chip.active { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+    .chip:hover:not(.active) { background: var(--bg); color: var(--text); }
+
+    /* TABLE */
+    .table-wrap { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 700px; }
+    thead { background: var(--bg); }
+    th {
+      text-align: left; padding: 9px 12px;
+      font-size: 11px; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafaf9; }
+    .cell-name { font-weight: 500; color: var(--text); }
+    .cell-addr { color: var(--muted); font-size: 12px; max-width: 220px; }
+    .cell-tel { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--info-text); }
+    .cell-notel { color: var(--hint); font-size: 12px; }
+    .cat-pill {
+      display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px;
+      background: var(--bg); border: 1px solid var(--border); color: var(--muted);
+    }
+    .rating { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--warn-text); }
+    .maps-link { color: var(--info-text); text-decoration: none; font-size: 12px; display: flex; align-items: center; gap: 3px; white-space: nowrap; }
+    .maps-link:hover { text-decoration: underline; }
+    .empty-row td { text-align: center; padding: 3rem; color: var(--muted); font-size: 14px; }
+
+    /* EXPORT */
+    .export-bar { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+
+    /* RESPONSIVE */
+    @media (max-width: 640px) {
+      .form-grid, .form-grid-3 { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      header { padding: 0 1rem; }
+      .container { padding: 1rem; }
+    }
+
+    /* PROGRESS BAR */
+    .progress-wrap { margin-top: 10px; }
+    .progress-bar-bg { background: var(--border); border-radius: 4px; height: 4px; overflow: hidden; }
+    .progress-bar-fill { height: 4px; background: var(--accent); border-radius: 4px; transition: width 0.3s; width: 0%; }
+    .progress-text { font-size: 12px; color: var(--muted); margin-top: 5px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    Webora Tools
+  </div>
+  <span class="header-tag">Biznese pa Website</span>
+</header>
+
+<div class="container">
+  <h1 class="page-title">Zbulo biznese pa faqe web</h1>
+  <p class="page-sub">Kërko biznese të regjistruara në Google Maps që nuk kanë website — mundësi direkte për Webora.</p>
+
+  <!-- CONFIG CARD -->
+  <div class="card">
+    <div class="card-title">Konfigurimi i serverit</div>
+    <div class="alert alert-info">
+      <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <span>Ky mjet komunikon me backend-in tënd. Vendos URL-në e serverit (p.sh. <code style="font-family:monospace; background:rgba(0,0,0,0.08); padding:1px 4px; border-radius:3px;">http://172.16.101.245:3045</code>).</span>
+    </div>
+    <div class="form-group">
+      <label>URL e Backend-it</label>
+      <div style="display:flex; gap:8px;">
+        <input type="text" id="backendUrl" placeholder="http://172.16.101.245:3045" style="flex:1;" />
+        <button class="btn btn-ghost btn-sm" onclick="testConnection()">Test lidhja</button>
+      </div>
+    </div>
+    <div id="connStatus" style="margin-top:8px;"></div>
+  </div>
+
+  <!-- SEARCH CARD -->
+  <div class="card">
+    <div class="card-title">Parametrat e kërkimit</div>
+    <div class="form-grid" style="margin-bottom:12px;">
+      <div class="form-group">
+        <label>Kategoria e biznesit</label>
+        <select id="category">
+          <option value="restaurant">🍽 Restorant</option>
+          <option value="cafe">☕ Kafene / Bar</option>
+          <option value="pharmacy">💊 Farmaci</option>
+          <option value="dentist">🦷 Dentist</option>
+          <option value="beauty_salon">💅 Salon bukurie</option>
+          <option value="hair_care">✂ Berber</option>
+          <option value="car_repair">🔧 Autoservis</option>
+          <option value="laundry">👕 Lavanderi</option>
+          <option value="gym">🏋 Palestër / Gym</option>
+          <option value="clothing_store">👗 Dyqan rrobash</option>
+          <option value="grocery_or_supermarket">🛒 Dyqan ushqimesh</option>
+          <option value="bakery">🥖 Furrë buke</option>
+          <option value="electrician">⚡ Elektricist</option>
+          <option value="plumber">🔩 Hidraulik</option>
+          <option value="accounting">📊 Kontabilist</option>
+          <option value="lawyer">⚖ Avokat</option>
+          <option value="real_estate_agency">🏠 Agjenci imobiliare</option>
+          <option value="travel_agency">✈ Agjenci udhëtimi</option>
+          <option value="veterinary_care">🐾 Veterinar</option>
+          <option value="florist">🌸 Florist</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Lagjja / Zona</label>
+        <select id="zone">
+          <option value="tirana">Tiranë (qendër)</option>
+          <option value="bllok">Blloku</option>
+          <option value="kombinat">Kombinat</option>
+          <option value="astir">Astir</option>
+          <option value="don_bosko">Don Bosko</option>
+          <option value="sauk">Sauk</option>
+          <option value="laprake">Laprakë</option>
+          <option value="kinostudio">Kinostudio</option>
+          <option value="yzberisht">Yzberisht</option>
+          <option value="fresk">Fresk</option>
+          <option value="pazari_ri">Pazari i Ri</option>
+          <option value="kamez">Kamëz</option>
+          <option value="selite">Selitë</option>
+          <option value="kashar">Kashar</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-grid-3">
+      <div class="form-group">
+        <label>Rreze (km)</label>
+        <select id="radius">
+          <option value="1000">1 km</option>
+          <option value="2000" selected>2 km</option>
+          <option value="3000">3 km</option>
+          <option value="5000">5 km</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Rezultate max</label>
+        <select id="maxResults">
+          <option value="20">20</option>
+          <option value="40" selected>40</option>
+          <option value="60">60</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Filtro sipas telefonit</label>
+        <select id="telFilter">
+          <option value="all">Të gjitha</option>
+          <option value="with_tel">Me telefon</option>
+          <option value="no_tel">Pa telefon</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="actions-row">
+      <button class="btn btn-primary" id="searchBtn" onclick="startSearch()">
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Kërko
+      </button>
+      <button class="btn btn-ghost btn-sm" id="clearBtn" onclick="clearResults()" style="display:none;">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6l-1 14H6L5 6M10 11v6M14 11v6M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/></svg>
+        Pastro
+      </button>
+      <div class="status" id="statusMsg"></div>
+    </div>
+
+    <div class="progress-wrap" id="progressWrap" style="display:none;">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+      <div class="progress-text" id="progressText"></div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="resultsSection" style="display:none;">
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-val" id="statTotal">0</div>
+        <div class="stat-lbl">Pa website (mundësi)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val" id="statWithTel">0</div>
+        <div class="stat-lbl">Me numër telefoni</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val" id="statChecked">0</div>
+        <div class="stat-lbl">Biznese të kontrolluara</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding: 1rem 1.25rem;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+        <div class="filter-row" style="margin:0;">
+          <button class="chip active" data-f="all" onclick="applyFilter(this,'all')">Të gjitha</button>
+          <button class="chip" data-f="tel" onclick="applyFilter(this,'tel')">Me telefon</button>
+          <button class="chip" data-f="notel" onclick="applyFilter(this,'notel')">Pa telefon</button>
+        </div>
+        <input type="text" id="searchFilter" placeholder="Kërko emër..." style="width:180px; font-size:13px;" oninput="filterByName(this.value)" />
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Emri i biznesit</th>
+              <th>Adresa</th>
+              <th>Kategoria</th>
+              <th>Telefon</th>
+              <th>Vlerësim</th>
+              <th>Google Maps</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="export-bar">
+        <button class="btn btn-ghost btn-sm" onclick="exportCSV()">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Shkarko CSV
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="exportExcelLink()">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m8 12 3 3 5-5"/></svg>
+          Kopjo Excel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ZONES = {
+  tirana:     [41.3275, 19.8187],
+  bllok:      [41.3266, 19.8089],
+  kombinat:   [41.3164, 19.8209],
+  astir:      [41.3344, 19.8516],
+  don_bosko:  [41.3345, 19.8264],
+  sauk:       [41.3469, 19.8436],
+  laprake:    [41.3433, 19.8313],
+  kinostudio: [41.3411, 19.8064],
+  yzberisht:  [41.3131, 19.8268],
+  fresk:      [41.3531, 19.8207],
+  pazari_ri:  [41.3303, 19.8236],
+  kamez:      [41.3793, 19.7791],
+  selite:     [41.3063, 19.8268],
+  kashar:     [41.3569, 19.7706]
+};
+
+const CAT_LABELS = {
+  restaurant:'Restorant', cafe:'Kafene', pharmacy:'Farmaci', dentist:'Dentist',
+  beauty_salon:'Salon', hair_care:'Berber', car_repair:'Autoservis',
+  laundry:'Lavanderi', gym:'Palestër', clothing_store:'Rrobaqepës',
+  grocery_or_supermarket:'Dyqan ushq.', bakery:'Furrë', electrician:'Elektricist',
+  plumber:'Hidraulik', accounting:'Kontabilist', lawyer:'Avokat',
+  real_estate_agency:'Imobiliare', travel_agency:'Agjenci', veterinary_care:'Veterinar',
+  florist:'Florist'
+};
+
+let allResults = [];
+let visibleResults = [];
+let currentFilter = 'all';
+let nameQuery = '';
+
+const $ = id => document.getElementById(id);
+
+function getBackendUrl() {
+  return ($('backendUrl').value.trim() || 'http://172.16.101.245:3045').replace(/\/$/, '');
+}
+
+async function testConnection() {
+  const url = getBackendUrl();
+  const el = $('connStatus');
+  el.innerHTML = '<div class="status"><div class="spinner"></div> Duke testuar lidhjen...</div>';
+  try {
+    const r = await fetch(url + '/health', { signal: AbortSignal.timeout(5000) });
+    if (r.ok) {
+      el.innerHTML = '<div class="status success">✓ Lidhja me serverin u krye me sukses</div>';
+    } else {
+      throw new Error('HTTP ' + r.status);
+    }
+  } catch(e) {
+    el.innerHTML = `<div class="status error">✗ Nuk mund të lidhem: ${e.message}</div>`;
+  }
+}
+
+function setStatus(html, cls='') {
+  const el = $('statusMsg');
+  el.className = 'status ' + cls;
+  el.innerHTML = html;
+}
+
+function setProgress(pct, text) {
+  $('progressWrap').style.display = pct > 0 ? 'block' : 'none';
+  $('progressFill').style.width = pct + '%';
+  $('progressText').textContent = text;
+}
+
+async function startSearch() {
+  const url = getBackendUrl();
+  const zone = $('zone').value;
+  const [lat, lng] = ZONES[zone] || ZONES.tirana;
+  const category = $('category').value;
+  const radius = parseInt($('radius').value);
+  const maxResults = parseInt($('maxResults').value);
+
+  $('searchBtn').disabled = true;
+  $('searchBtn').innerHTML = '<div class="spinner"></div> Duke kërkuar...';
+  $('resultsSection').style.display = 'none';
+  $('clearBtn').style.display = 'none';
+  setProgress(5, 'Duke dërguar kërkesën te serveri...');
+  setStatus('<div class="spinner"></div> Duke kërkuar biznese pa website...', '');
+
+  try {
+    const resp = await fetch(url + '/api/search-no-website', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lat, lng, radius, type: category, maxResults }),
+      signal: AbortSignal.timeout(120000)
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error || 'HTTP ' + resp.status);
+    }
+
+    const data = await resp.json();
+    allResults = (data.results || []).map(r => ({
+      ...r,
+      _catLabel: getCatLabel(r.types)
+    }));
+
+    setProgress(100, 'Gati!');
+    setTimeout(() => setProgress(0, ''), 1200);
+
+    if (!allResults.length) {
+      setStatus('Asnjë biznes pa website u gjet. Provo kategori ose zonë tjetër.', '');
+    } else {
+      setStatus(`✓ U gjetën ${allResults.length} biznese pa website nga ${data.total_checked} të kontrolluara`, 'success');
+      renderResults();
+      $('resultsSection').style.display = 'block';
+      $('clearBtn').style.display = 'inline-flex';
+    }
+
+  } catch(e) {
+    setProgress(0, '');
+    setStatus('✗ Gabim: ' + e.message, 'error');
+  }
+
+  $('searchBtn').disabled = false;
+  $('searchBtn').innerHTML = '<svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Kërko';
+}
+
+function getCatLabel(types) {
+  for (const t of (types||[])) { if (CAT_LABELS[t]) return CAT_LABELS[t]; }
+  return (types||[])[0] || '—';
+}
+
+function applyFilter(btn, f) {
+  currentFilter = f;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+function filterByName(q) {
+  nameQuery = q.toLowerCase();
+  renderTable();
+}
+
+function getFiltered() {
+  let r = [...allResults];
+  if (currentFilter === 'tel') r = r.filter(x => x.formatted_phone_number);
+  if (currentFilter === 'notel') r = r.filter(x => !x.formatted_phone_number);
+  if (nameQuery) r = r.filter(x => x.name.toLowerCase().includes(nameQuery));
+  return r;
+}
+
+function renderResults() {
+  const withTel = allResults.filter(r => r.formatted_phone_number).length;
+  $('statTotal').textContent = allResults.length;
+  $('statWithTel').textContent = withTel;
+  $('statChecked').textContent = allResults.length;
+  renderTable();
+}
+
+function renderTable() {
+  visibleResults = getFiltered();
+  const tbody = $('tbody');
+
+  if (!visibleResults.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="7">Asnjë rezultat për filtrin e zgjedhur.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = visibleResults.map((r, i) => `
+    <tr>
+      <td style="color:var(--hint);font-size:12px;">${i+1}</td>
+      <td class="cell-name">${esc(r.name)}</td>
+      <td class="cell-addr">${esc(r.formatted_address || '—')}</td>
+      <td><span class="cat-pill">${esc(r._catLabel)}</span></td>
+      <td>${r.formatted_phone_number
+        ? `<span class="cell-tel">${esc(r.formatted_phone_number)}</span>`
+        : `<span class="cell-notel">—</span>`}</td>
+      <td>${r.rating
+        ? `<div class="rating">★ ${r.rating} <span style="color:var(--hint)">(${r.user_ratings_total||0})</span></div>`
+        : `<span style="color:var(--hint);font-size:12px;">—</span>`}</td>
+      <td><a class="maps-link" href="${esc(r.maps_url)}" target="_blank">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Hap Maps
+      </a></td>
+    </tr>
+  `).join('');
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function clearResults() {
+  allResults = [];
+  visibleResults = [];
+  $('resultsSection').style.display = 'none';
+  $('clearBtn').style.display = 'none';
+  setStatus('', '');
+}
+
+function exportCSV() {
+  if (!visibleResults.length) return;
+  const rows = [['Emri','Adresa','Kategoria','Telefon','Vlerësim','Reviews','Google Maps']];
+  visibleResults.forEach(r => {
+    rows.push([
+      `"${(r.name||'').replace(/"/g,'""')}"`,
+      `"${(r.formatted_address||'').replace(/"/g,'""')}"`,
+      r._catLabel,
+      r.formatted_phone_number || '',
+      r.rating || '',
+      r.user_ratings_total || 0,
+      r.maps_url || ''
+    ]);
+  });
+  const csv = '\uFEFF' + rows.map(r => r.join(',')).join('\r\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `biznese_pa_website_${Date.now()}.csv`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportExcelLink() {
+  if (!visibleResults.length) return;
+  const lines = visibleResults.map((r,i) =>
+    `${i+1}\t${r.name}\t${r.formatted_address||''}\t${r._catLabel}\t${r.formatted_phone_number||''}\t${r.rating||''}\t${r.maps_url||''}`
+  ).join('\n');
+  navigator.clipboard.writeText('Emri\tAdresa\tKategoria\tTelefon\tVlerësim\tGoogle Maps\n' + lines)
+    .then(() => alert('✓ Të dhënat u kopjuan — mund t\'i ngjitësh direkt në Excel!'))
+    .catch(() => alert('Kopjimi nuk funksionoi — provo CSV.'));
+}
+
+// Load saved backend URL
+const saved = localStorage.getItem('webora_backend_url');
+if (saved) $('backendUrl').value = saved;
+$('backendUrl').addEventListener('change', () => {
+  localStorage.setItem('webora_backend_url', $('backendUrl').value.trim());
+});
+</script>
+</body>
+</html>
